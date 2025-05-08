@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  app:
+    image: event-booking
+    container_name: event-booking-api
+    build:
+      context: .
+    ports:
+      - "8000:8000"
+    environment:
+      - DB_CONNECTION=mysql
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_DATABASE=event_booking
+      - DB_USERNAME=root
+      - DB_PASSWORD=root
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - db
+    networks:
+      - event-booking
+
+  db:
+    image: mysql:8.0
+    container_name: event-booking-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: event_booking
+    ports:
+      - "3306:3306"
+    networks:
+      - event-booking
+
+networks:
+  event-booking:
+    driver: bridge
