@@ -1,0 +1,409 @@
+{
+	"info": {
+		"_postman_id": "2b2908c9-0af9-478b-a653-a648e52c6884",
+		"name": "Event Booking API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "44786553"
+	},
+	"item": [
+		{
+			"name": "Event",
+			"item": [
+				{
+					"name": "Create Event",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"title\": \"Demo Event\",\r\n  \"description\": \"A sample event\",\r\n  \"date\": \"2025-06-01\",\r\n  \"country_id\": 1,\r\n  \"capacity\": 50\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/events/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"events",
+								""
+							]
+						},
+						"description": "The HTTP POST request is used to create a new event by sending the event details in the request body. The request should include the title, description, date, country_id, and capacity of the event.\n\n### Request Body\n\n- title (string, required): The title of the event.\n    \n- description (string, required): A brief description of the event.\n    \n- date (string, required): The date of the event in the format \"YYYY-MM-DD\".\n    \n- country_id (integer, required): The ID of the country where the event is taking place.\n    \n- capacity (integer, required): The maximum capacity of the event.\n    \n\n### Response\n\nThe response of this request is a JSON schema representing the structure of the response data.\n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"id\": {\n      \"type\": \"integer\"\n    },\n    \"title\": {\n      \"type\": \"string\"\n    },\n    \"description\": {\n      \"type\": \"string\"\n    },\n    \"date\": {\n      \"type\": \"string\",\n      \"format\": \"date\"\n    },\n    \"country_id\": {\n      \"type\": \"integer\"\n    },\n    \"capacity\": {\n      \"type\": \"integer\"\n    }\n  }\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Event",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"title\": \"Demo Event Updated\",\r\n  \"description\": \"A sample event\",\r\n  \"date\": \"2025-06-01\",\r\n  \"country_id\": 1,\r\n  \"capacity\": 50\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/events/{eventId}",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"events",
+								"{eventId}"
+							]
+						},
+						"description": "This endpoint allows updating an existing event by sending an HTTP PUT request to the specified URL with the event ID in the path parameter. The request should include a JSON payload in the raw request body, containing the updated information for the event such as title, description, date, country ID, and capacity.\n\n### Response\n\nThe response of this request is a JSON schema representing the structure of the response data. This schema can be used to understand the format of the response that will be received upon successful update of the event.\n\n- `title` (string): The title of the event.\n    \n- `description` (string): A brief description of the event.\n    \n- `date` (string): The date of the event in the format 'YYYY-MM-DD'.\n    \n- `country_id` (integer): The ID of the country where the event is taking place.\n    \n- `capacity` (integer): The maximum capacity for the event.\n    \n\nThe response will include the updated details of the event after the PUT request is successfully processed."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Event Details By id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/events/{eventId}",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"events",
+								"{eventId}"
+							]
+						},
+						"description": "The endpoint retrieves details of a specific event identified by the eventID.\n\n### Response\n\nThe response is a JSON object with the following schema:\n\n``` json\n{\n    \"type\": \"object\",\n    \"properties\": {\n        \"success\": {\n            \"type\": \"boolean\"\n        },\n        \"message\": {\n            \"type\": \"string\"\n        },\n        \"data\": {\n            \"type\": \"object\",\n            \"properties\": {\n                \"id\": {\n                    \"type\": \"integer\"\n                },\n                \"title\": {\n                    \"type\": \"string\"\n                },\n                \"description\": {\n                    \"type\": \"string\"\n                },\n                \"date\": {\n                    \"type\": \"string\"\n                },\n                \"location\": {\n                    \"type\": \"string\"\n                },\n                \"capacity\": {\n                    \"type\": \"integer\"\n                },\n                \"booked\": {\n                    \"type\": \"integer\"\n                }\n            }\n        }\n    }\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Event",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/events/{eventId}",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"events",
+								"{eventId}"
+							]
+						},
+						"description": "### Delete Event\n\nThis endpoint is used to delete a specific event by providing the event ID in the URL.\n\n#### Request Parameters\n\n- `eventID` (in path): The ID of the event to be deleted.\n    \n\n#### Response\n\nThe response will not contain a response body. The status code will indicate the success or failure of the deletion operation.\n\nThis endpoint is used to delete a specific event by providing the event ID in the URL path.\n\n#### Request Body\n\nThis request does not require a request body.\n\n#### Response\n\nUpon successful deletion, the server will respond with a 204 No Content status code, indicating that the event has been successfully deleted. If the event ID is not found, the server will respond with a 404 Not Found status code.\n\n### Response\n\nThe response of this request is a JSON schema representing the structure of the response data."
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Events",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/events",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"events"
+							]
+						},
+						"description": "The endpoint retrieves a list of events.\n\nThe response follows the JSON schema below:\n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"success\": {\n      \"type\": \"boolean\"\n    },\n    \"message\": {\n      \"type\": \"string\"\n    },\n    \"data\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"id\": {\n            \"type\": \"integer\"\n          },\n          \"title\": {\n            \"type\": \"string\"\n          },\n          \"description\": {\n            \"type\": \"string\"\n          },\n          \"date\": {\n            \"type\": \"string\"\n          },\n          \"location\": {\n            \"type\": \"string\"\n          },\n          \"capacity\": {\n            \"type\": \"integer\"\n          },\n          \"booked\": {\n            \"type\": \"integer\"\n          }\n        }\n      }\n    },\n    \"meta\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"current_page\": {\n          \"type\": \"integer\"\n        },\n        \"last_page\": {\n          \"type\": \"integer\"\n        },\n        \"per_page\": {\n          \"type\": \"integer\"\n        },\n        \"total\": {\n          \"type\": \"integer\"\n        }\n      }\n    }\n  }\n}\n\n ```"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Attendee",
+			"item": [
+				{
+					"name": "Add Attendee",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Himanshu vishwakarma\",\r\n  \"email\": \"Himanshu.v1@example.com\",\r\n  \"phone\": \"+123456789\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/attendees",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"attendees"
+							]
+						},
+						"description": "### Register a new attendee\n\nThe API endpoint allows you to register a new attendee by sending a POST request to the specified URL.\n\n#### Request Body\n\n- Raw (application/json)\n    \n    - `name`: (string) The name of the attendee.\n        \n    - `email`: (string) The email of the attendee.\n        \n    - `phone`: (string) The phone number of the attendee.\n        \n\n#### Response\n\nThe response of this request can be documented as a JSON schema:\n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"success\": {\n      \"type\": \"boolean\"\n    },\n    \"message\": {\n      \"type\": \"string\"\n    },\n    \"data\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"id\": {\n          \"type\": \"integer\"\n        },\n        \"name\": {\n          \"type\": \"string\"\n        },\n        \"email\": {\n          \"type\": \"string\"\n        },\n        \"phone\": {\n          \"type\": \"string\"\n        },\n        \"created_at\": {\n          \"type\": \"string\"\n        }\n      }\n    }\n  }\n}\n\n ```\n\n#### Description\n\nRegister a new attendee.\n\n#### Request Body\n\n- Type: Raw\n    \n- { \"name\": \"Himanshu vishwakarma\", \"email\": \"Himanshu.v1@example.com\", \"phone\": \"+123456789\"}\n    \n\n#### Response\n\n- Status: 201\n    \n- Content-Type: application/json\n    \n- { \"success\": true, \"message\": \"\", \"data\": { \"id\": 0, \"name\": \"\", \"email\": \"\", \"phone\": \"\", \"created_at\": \"\" }}"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single Attendee Details",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Himanshu vishwakarma\",\r\n  \"email\": \"Himanshu.v1@example.com\",\r\n  \"phone\": \"+123456789\"\r\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/attendees/{attendeeId}",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"attendees",
+								"{attendeeId}"
+							]
+						},
+						"description": "# Get Attendee Details\n\nThis endpoint retrieves the details of a specific attendee identified by their ID.\n\n## Request\n\n### Request URL\n\n- `GET` [http://127.0.0.1:8000/api/attendees/{attendeeID}](http://127.0.0.1:8000/api/attendees/%7BattendeeID%7D)\n    \n\n## Response\n\nThe response for this request is a JSON object with the following schema:\n\n``` json\n{\n    \"type\": \"object\",\n    \"properties\": {\n        \"id\": {\n            \"type\": \"string\"\n        },\n        \"name\": {\n            \"type\": \"string\"\n        },\n        \"email\": {\n            \"type\": \"string\"\n        },\n        \"phone\": {\n            \"type\": \"string\"\n        }\n    }\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Attendee",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/attendees/{attendeeId}",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"attendees",
+								"{attendeeId}"
+							]
+						},
+						"description": "### Delete Attendee\n\nThis endpoint is used to delete a specific attendee.\n\n#### Request\n\n- Method: DELETE\n    \n- URL: `/api/attendees/{attendeeID}`\n    \n\n#### Response\n\nThe response for this request follows the JSON schema below:\n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"message\": {\n      \"type\": \"string\"\n    }\n  }\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Attendee Details",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Himanshu vishwakarma\",\r\n  \"email\": \"Himanshu.564@example.com\",\r\n  \"phone\": \"+123456789\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/attendees/{attendeeId}",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"attendees",
+								"{attendeeId}"
+							]
+						},
+						"description": "### Update Attendee Information\n\nUpdates the information of a specific attendee.\n\n#### Request\n\n- Method: `PUT`\n    \n- URL: `http://127.0.0.1:8000/api/attendees/{attendeeID}`\n    \n\n##### Request Body\n\n``` json\n{\n    \"name\": \"Himanshu vishwakarma\",\n    \"email\": \"Himanshu.v1@example.com\",\n    \"phone\": \"+123456789\"\n}\n\n ```\n\n#### Response\n\nThe response of this request is documented as a JSON schema.\n\n- `name`: (string) The updated name of the attendee.\n    \n- `email`: (string) The updated email of the attendee.\n    \n- `phone`: (string) The updated phone number of the attendee.\n    \n\n### Request Body\n\n``` json\n{\n  \"name\": \"Updated Name\",\n  \"email\": \"updated.email@example.com\",\n  \"phone\": \"+1234567890\"\n}\n\n ```\n\n### Response Body\n\nThe response body will contain the updated information of the attendee after the successful update operation."
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Attendee",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/attendees/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"attendees",
+								""
+							]
+						},
+						"description": "The endpoint retrieves a list of attendees. The response is a JSON object with the following schema:\n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"success\": {\n      \"type\": \"boolean\"\n    },\n    \"message\": {\n      \"type\": \"string\"\n    },\n    \"data\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"id\": {\n            \"type\": \"integer\"\n          },\n          \"name\": {\n            \"type\": \"string\"\n          },\n          \"email\": {\n            \"type\": \"string\"\n          },\n          \"phone\": {\n            \"type\": \"string\"\n          },\n          \"created_at\": {\n            \"type\": \"string\"\n          }\n        }\n      }\n    },\n    \"meta\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"current_page\": {\n          \"type\": \"integer\"\n        },\n        \"last_page\": {\n          \"type\": \"integer\"\n        },\n        \"per_page\": {\n          \"type\": \"integer\"\n        },\n        \"total\": {\n          \"type\": \"integer\"\n        }\n      }\n    }\n  }\n}\n\n ```"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Booking",
+			"item": [
+				{
+					"name": "Event Booking",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"event_id\":1,\r\n    \"attendee_id\":2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/bookings",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"bookings"
+							]
+						},
+						"description": "### Request\n\nThis endpoint allows you to book an attendee for an event.\n\n#### Request Body\n\n- Type: JSON\n    \n\n| Key | Type | Description |\n| --- | --- | --- |\n| event_id | Number | The ID of the event |\n| attendee_id | Number | The ID of the attendee |\n\n#### Constraints\n\n- Cannot book the same event twice for the same attendee.\n    \n- Cannot book if the event is full.\n    \n\n### Response\n\nThe response is in JSON format and follows the schema below:\n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"success\": {\n      \"type\": \"boolean\"\n    },\n    \"message\": {\n      \"type\": \"string\"\n    },\n    \"data\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"event_id\": {\n          \"type\": \"number\"\n        },\n        \"attendee_id\": {\n          \"type\": \"number\"\n        },\n        \"updated_at\": {\n          \"type\": \"string\"\n        },\n        \"created_at\": {\n          \"type\": \"string\"\n        },\n        \"id\": {\n          \"type\": \"number\"\n        }\n      }\n    }\n  }\n}\n\n ```\n\n#### Possible Status Codes\n\n- `200 OK` – Booking confirmed.\n    \n- `409 Conflict` – Duplicate booking.\n    \n- `422 Unprocessable Entity` – Event full."
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
