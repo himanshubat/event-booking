@@ -23,7 +23,7 @@ class UpdateAttendeeRequest extends FormRequest
     {
         return [
             'name' => 'sometimes|required|string|max:100',
-            'email' => 'sometimes|required|email|unique:attendees,email,' . $this->attendee->id,
+            'email' => 'sometimes|required|email|unique:attendees,email,' . $this->route('id'),
             'phone' => 'nullable|string|max:20',
         ];
     }

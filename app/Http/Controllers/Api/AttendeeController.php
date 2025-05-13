@@ -3,67 +3,66 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Attendee;
 use Illuminate\Http\JsonResponse;
 use App\Http\Resources\AttendeeResource;
 use App\Http\Requests\AttendeeRequest;
 use App\Http\Requests\UpdateAttendeeRequest;
+use App\Traits\ApiResponseTrait;
+use App\Services\AttendeeService;
 
 class AttendeeController extends Controller
 {
+    use ApiResponseTrait;
+
+    protected AttendeeService $attendeeService;
+    protected string $resourceName = 'Attendee';
+
+    public function __construct(AttendeeService $attendeeService)
+    {
+        $this->attendeeService = $attendeeService;
+    }
+
     public function index(): JsonResponse
     {
-        $attendees = Attendee::paginate(10);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Attendee retrieved successfully.',
-            'data' => AttendeeResource::collection($attendees),
-            'meta' => [
-                'current_page' => $attendees->currentPage(),
-                'last_page' => $attendees->lastPage(),
-                'per_page' => $attendees->perPage(),
-                'total' => $attendees->total(),
-            ]
-        ]);
+        $attendees = $this->attendeeService->getAll();
+        return $this->paginatedResponse(AttendeeResource::collection($attendees), "{$this->resourceName}s retrieved successfully.");
     }
 
     public function store(AttendeeRequest $request): JsonResponse
     {
-        $attendee = Attendee::create($request->validated());
-        return response()->json([
-            'success' => true,
-            'message' => 'Attendee created successfully.',
-            'data' => new AttendeeResource($attendee),
-        ], 201);
+        $attendee = $this->attendeeService->create($request->validated());
+        return $this->successResponse(new AttendeeResource($attendee), "{$this->resourceName} created successfully.", 201);
     }
 
-    public function show(Attendee $attendee): JsonResponse
+    public function show(int $id): JsonResponse
     {
-        return response()->json([
-            'success' => true,
-            'message' => 'Attendee retrieved successfully.',
-            'data' => new AttendeeResource($attendee),
-        ], 200);
+        try {
+            $attendee = $this->attendeeService->find($id);
+            return $this->successResponse(new AttendeeResource($attendee), "{$this->resourceName} retrieved successfully.");
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return $this->errorResponse("{$this->resourceName} not found.", [], 404);
+        }
     }
 
-    public function update(UpdateAttendeeRequest $request, Attendee $attendee): JsonResponse
+    public function update(UpdateAttendeeRequest $request, int $id): JsonResponse
     {
-        $attendee->update($request->validated());
-        return response()->json([
-            'success' => true,
-            'message' => 'Attendee updated successfully.',
-            'data' => new AttendeeResource($attendee),
-        ], 200);
+        try {
+            $attendee = $this->attendeeService->find($id);
+            $updated = $this->attendeeService->update($attendee, $request->validated());
+            return $this->successResponse(new AttendeeResource($updated), "{$this->resourceName} updated successfully.");
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return $this->errorResponse("{$this->resourceName} not found.", [], 404);
+        }
     }
 
-    public function destroy(Attendee $attendee): JsonResponse
+    public function destroy(int $id): JsonResponse
     {
-        $attendee->delete();
-        return response()->json([
-            'success' => true,
-            'message' => 'Attendee deleted successfully.',
-            'data' => NULL,
-        ], 200);
+        try {
+            $attendee = $this->attendeeService->find($id);
+            $this->attendeeService->delete($attendee);
+            return $this->successResponse(null, "{$this->resourceName} deleted successfully.");
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return  $this->errorResponse("{$this->resourceName} not found.", [], 404);
+        }
     }
 }

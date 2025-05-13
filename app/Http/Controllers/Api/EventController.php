@@ -6,62 +6,63 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\EventRequest;
 use App\Http\Resources\EventResource;
 use Illuminate\Http\JsonResponse;
-use App\Models\Event;
+use App\Traits\ApiResponseTrait;
+use App\Services\EventService;
 
 class EventController extends Controller
 {
+    use ApiResponseTrait;
+    protected EventService $eventService;
+    protected string $resourceName = 'Event';
+    
+    public function __construct(EventService $eventService)
+    {
+        $this->eventService = $eventService;
+    }
+
     public function index(): JsonResponse
     {
-        $events = Event::paginate(10);
-        return response()->json([
-            'success' => true,
-            'message' => 'Event retrieved successfully.',
-            'data' => EventResource::collection($events),
-            'meta' => [
-                'current_page' => $events->currentPage(),
-                'last_page' => $events->lastPage(),
-                'per_page' => $events->perPage(),
-                'total' => $events->total(),
-            ]
-        ]);
+        $events = $this->eventService->getAll();
+        return $this->paginatedResponse(EventResource::collection($events), "{$this->resourceName}s retrieved successfully.");
     }
 
     public function store(EventRequest $request): JsonResponse
     {
-        $event = Event::create($request->validated());
-        return response()->json([
-            'success' => true,
-            'message' => 'Event created successfully.',
-            'data' => new EventResource($event),
-        ], 201);
+        $event = $this->eventService->create($request->validated());
+        return $this->successResponse(new EventResource($event), "{$this->resourceName} created successfully.", 201);
     }
 
-    public function update(EventRequest $request, Event $event): JsonResponse
+    public function update(EventRequest $request, int $id)
     {
-        $event->update($request->validated());
-        return response()->json([
-            'success' => true,
-            'message' => 'Event updated successfully.',
-            'data' => new EventResource($event),
-        ], 200);
+
+        try {
+            $event = $this->eventService->find($id);
+            $updated = $this->eventService->update($event, $request->validated());
+            return $this->successResponse(new EventResource($updated), "{$this->resourceName} updated successfully.");
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return  $this->errorResponse('Event not found.', [], 404);
+        }
     }
 
-    public function show(Event $event): JsonResponse
+    public function show(int $id): JsonResponse
     {
-        return response()->json([
-            'success' => true,
-            'message' => 'Event detail retrieved successfully.',
-            'data' => new EventResource($event),
-        ], 200);
+        try {
+            $event = $this->eventService->find($id);
+            return $this->successResponse(new EventResource($event), "{$this->resourceName} retrieved successfully.");
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return  $this->errorResponse('Event not found.', [], 404);
+        }
     }
 
-    public function destroy(Event $event): JsonResponse
+    public function destroy(int $id)
     {
-        $event->delete();
-        return response()->json([
-            'success' => true,
-            'message' => 'Event deleted successfully.',
-            'data'   => NULL
-        ], 200);
+       
+        try {
+            $event = $this->eventService->find($id);
+            $this->eventService->delete($event);
+            return $this->successResponse(null, "{$this->resourceName} deleted successfully.");
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return  $this->errorResponse("{$this->resourceName} not found.", [], 404);
+        }
     }
 }

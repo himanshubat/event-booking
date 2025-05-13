@@ -10,13 +10,22 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::prefix('events')->group(function () {
-    Route::post('/', [EventController::class, 'store']);
-    Route::get('/', [EventController::class, 'index']);
-    Route::put('/{event}', [EventController::class, 'update']);
-    Route::get('/{event}', [EventController::class, 'show']);
-    Route::delete('/{event}', [EventController::class, 'destroy']);
+Route::prefix('events')->name('events.')->group(function () {
+    Route::get('/', [EventController::class, 'index'])->name('index');
+    Route::post('/', [EventController::class, 'store'])->name('store');
+    Route::get('{id}', [EventController::class, 'show'])->name('show');
+    Route::put('{id}', [EventController::class, 'update'])->name('update');
+    Route::delete('{id}', [EventController::class, 'destroy'])->name('destroy');
 });
 
-Route::apiResource('attendees', AttendeeController::class);
-Route::post('/bookings', [BookingController::class, 'store']);
+// Attendee Routes
+Route::prefix('attendees')->name('attendees.')->group(function () {
+    Route::get('/', [AttendeeController::class, 'index'])->name('index');
+    Route::post('/', [AttendeeController::class, 'store'])->name('store');
+    Route::get('{id}', [AttendeeController::class, 'show'])->name('show');
+    Route::put('{id}', [AttendeeController::class, 'update'])->name('update');
+    Route::delete('{id}', [AttendeeController::class, 'destroy'])->name('destroy');
+});
+
+// Booking Route
+Route::post('/bookings', [BookingController::class, 'store'])->name('bookings.store');
