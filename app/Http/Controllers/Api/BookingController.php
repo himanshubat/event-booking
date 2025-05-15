@@ -35,7 +35,7 @@ class BookingController extends Controller
         } catch (ValidationException $e) {
             return $this->errorResponse(
                 "{$this->resourceName} failed due to validation errors.",
-                $e->errors(),
+                $e->errors() ?: json_decode($e->getResponse()->getContent(), true)['errors'],
                 422
             );
         } catch (\Exception $e) {
