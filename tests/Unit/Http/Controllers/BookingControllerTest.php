@@ -61,10 +61,8 @@ class BookingControllerTest extends TestCase
         $this->assertTrue($responseData['success']);
         $this->assertEquals('Booking successful.', $responseData['message']);
         $this->assertArrayHasKey('data', $responseData);
-        $this->assertArrayHasKey('event_id', $responseData['data']);
-        $this->assertEquals($event->id, $responseData['data']['event_id']);
-        $this->assertArrayHasKey('attendee_id', $responseData['data']);
-        $this->assertEquals($attendee->id, $responseData['data']['attendee_id']);
+        $this->assertArrayHasKey('event', $responseData['data']);
+        $this->assertArrayHasKey('attendee', $responseData['data']);
     }
 
     public function test_prevent_duplicate_booking()

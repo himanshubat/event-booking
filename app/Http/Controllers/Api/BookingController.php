@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\BookEventRequest;
+
 use App\Services\BookingService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Validation\ValidationException;
 use App\Traits\ApiResponseTrait;
+use App\Http\Requests\BookEventRequest;
+use App\Http\Resources\BookingResource;
+use Illuminate\Validation\ValidationException;
 
 class BookingController extends Controller
 {
@@ -27,8 +29,9 @@ class BookingController extends Controller
                 $request->input('event_id'),
                 $request->input('attendee_id')
             );
+            $booking->load(['event', 'attendee']);
             return $this->successResponse(
-                $booking,
+                new BookingResource($booking),
                 "{$this->resourceName} successful.",
                 201
             );
